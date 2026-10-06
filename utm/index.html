@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>UTM Builder — Wilson</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0c0d;
+            color: #a0a0a0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navbar */
+        .navbar {
+            border-bottom: 1px solid #1f2123;
+            padding: 0 40px;
+        }
+
+        .navbar nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            height: 60px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .navbar a {
+            color: #55585b;
+            text-decoration: none;
+            transition: color 0.2s;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .navbar a:hover {
+            color: #ffffff;
+        }
+
+        .navbar a.active {
+            color: #ffffff;
+        }
+
+        .navbar a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #00e074;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 40px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .section-title .line {
+            width: 24px;
+            height: 1px;
+            background-color: #00e074;
+        }
+
+        .section-title h1 {
+            font-size: 14px;
+            color: #7a7e82;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        label, .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            color: #55585b;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .section-label {
+            margin-bottom: 24px;
+        }
+
+        .tag-auto {
+            font-size: 10px;
+            color: #00e074;
+            border: 1px solid rgba(0, 224, 116, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(0, 224, 116, 0.05);
+            letter-spacing: 0;
+        }
+
+        .tag-auto.hidden {
+            display: none;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            background-color: #121315;
+            border: 1px solid #1f2123;
+            color: #ffffff;
+            padding: 14px 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #00e074;
+        }
+
+        input[type="text"][readonly] {
+            color: #ffffff;
+        }
+
+        input::placeholder {
+            color: #3f4245;
+        }
+
+        select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .select-wrapper {
+            position: relative;
+            max-width: 450px;
+        }
+
+        .select-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%226%22%20viewBox%3D%220%200%2010%206%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M1%201L5%205L9%201%22%20stroke%3D%22%2355585B%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+
+        /* Grid Params */
+        .grid-params {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            column-gap: 24px;
+            row-gap: 8px;
+        }
+
+        .utm-params-section {
+            margin-bottom: 48px;
+        }
+
+        /* Result Section */
+        .url-output-container {
+            display: flex;
+            gap: 16px;
+        }
+
+        .url-output-container input {
+            flex: 1;
+            color: #a0a0a0;
+            font-family: monospace;
+            font-size: 13px;
+            background-color: #0b0c0d;
+        }
+
+        #btn_copiar {
+            background-color: transparent;
+            color: #00e074;
+            border: 1px solid rgba(0, 224, 116, 0.4);
+            padding: 0 24px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        #btn_copiar:hover {
+            background-color: rgba(0, 224, 116, 0.1);
+            border-color: #00e074;
+        }
+
+        @media (max-width: 720px) {
+            .navbar, .container {
+                padding: 0 20px;
+            }
+
+            .grid-params {
+                grid-template-columns: 1fr;
+            }
+
+            .url-output-container {
+                flex-direction: column;
+            }
+
+            #btn_copiar {
+                padding: 14px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <nav>
+            <a href="#" class="active">UTM BUILDER</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="section-title">
+            <span class="line"></span>
+            <h1>UTM BUILDER</h1>
+        </div>
+
+        <section class="form-section">
+            <div class="form-group">
+                <label for="url_base">URL BASE</label>
+                <input type="text" id="url_base" value="https://evento-wilson.vercel.app/" placeholder="Insira a URL base">
+            </div>
+
+            <div class="form-group canal-group">
+                <label for="canal">CANAL</label>
+                <div class="select-wrapper">
+                    <!-- data-medium vazio = usuário preenche o utm_medium manualmente -->
+                    <select id="canal">
+                        <option value="instagram" data-source="instagram" data-medium="">Instagram</option>
+                        <option value="api_oficial" data-source="api-oficial" data-medium="whatsapp">API Oficial</option>
+                        <option value="grupos_antigos" data-source="grupos-antigos" data-medium="whatsapp">Grupos Antigos</option>
+                        <option value="grupos_novos" data-source="grupos-novos" data-medium="whatsapp">Grupos Novos</option>
+                        <option value="email" data-source="activecampaign" data-medium="email">Email</option>
+                        <option value="time_interno" data-source="time" data-medium="time-interno">Time Interno</option>
+                        <option value="meta" data-source="meta" data-medium="paid">Meta</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="utm-params-section">
+                <label class="section-label">PARÂMETROS UTM</label>
+                <div class="grid-params">
+                    <div class="form-group">
+                        <label for="utm_source">utm_source <span class="tag-auto" id="tag_source">AUTO</span></label>
+                        <input type="text" id="utm_source" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="utm_medium">utm_medium <span class="tag-auto" id="tag_medium">AUTO</span></label>
+                        <input type="text" id="utm_medium" placeholder="Ex: wilson-di-mauro" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="utm_campaign">utm_campaign</label>
+                        <input type="text" id="utm_campaign" placeholder="Ex: evento-wilson-out-2026">
+                    </div>
+                    <div class="form-group">
+                        <label for="utm_content">utm_content</label>
+                        <input type="text" id="utm_content" placeholder="bio - stories - manychat - reels">
+                    </div>
+                    <div class="form-group">
+                        <label for="utm_term">utm_term</label>
+                        <input type="text" id="utm_term" placeholder="130326-0800 - 140426-2030">
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <label for="url_gerada">URL GERADA</label>
+                <div class="url-output-container">
+                    <input type="text" id="url_gerada" readonly>
+                    <button id="btn_copiar">Copiar URL</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlBaseInput = document.getElementById('url_base');
+            const canalSelect = document.getElementById('canal');
+            const utmSourceInput = document.getElementById('utm_source');
+            const utmMediumInput = document.getElementById('utm_medium');
+            const utmCampaignInput = document.getElementById('utm_campaign');
+            const utmContentInput = document.getElementById('utm_content');
+            const utmTermInput = document.getElementById('utm_term');
+            const urlGeradaInput = document.getElementById('url_gerada');
+            const btnCopiar = document.getElementById('btn_copiar');
+
+            const tagSource = document.getElementById('tag_source');
+            const tagMedium = document.getElementById('tag_medium');
+
+            function updateUrl() {
+                try {
+                    let baseUrl = urlBaseInput.value.trim();
+                    if (!baseUrl) {
+                        urlGeradaInput.value = '';
+                        return;
+                    }
+
+                    // Garante que tenha http/https para não quebrar o URL constructor
+                    if (!/^https?:\/\//i.test(baseUrl)) {
+                        baseUrl = 'https://' + baseUrl;
+                    }
+
+                    const url = new URL(baseUrl);
+                    const params = new URLSearchParams(url.search);
+
+                    const utms = {
+                        utm_source: utmSourceInput.value.trim(),
+                        utm_medium: utmMediumInput.value.trim(),
+                        utm_campaign: utmCampaignInput.value.trim(),
+                        utm_content: utmContentInput.value.trim(),
+                        utm_term: utmTermInput.value.trim()
+                    };
+
+                    Object.entries(utms).forEach(([key, value]) => {
+                        if (value) params.set(key, value);
+                        else params.delete(key);
+                    });
+
+                    let finalUrl = url.origin + url.pathname;
+                    const paramString = params.toString();
+                    if (paramString) {
+                        finalUrl += '?' + paramString;
+                    }
+
+                    urlGeradaInput.value = finalUrl;
+                } catch (e) {
+                    // Em caso de erro ao parsear a URL, deixa em branco
+                    urlGeradaInput.value = '';
+                }
+            }
+
+            function onCanalChange() {
+                const selectedOption = canalSelect.options[canalSelect.selectedIndex];
+                const source = selectedOption.getAttribute('data-source');
+                const medium = selectedOption.getAttribute('data-medium');
+                const mediumAberto = medium === '';
+
+                utmSourceInput.value = source;
+                utmMediumInput.value = medium;
+                utmMediumInput.readOnly = !mediumAberto;
+                tagMedium.classList.toggle('hidden', mediumAberto);
+
+                updateUrl();
+            }
+
+            // Listeners
+            canalSelect.addEventListener('change', onCanalChange);
+
+            // Atualiza a URL final ao digitar em qualquer campo
+            const inputsToWatch = [urlBaseInput, utmSourceInput, utmMediumInput, utmCampaignInput, utmContentInput, utmTermInput];
+            inputsToWatch.forEach(input => {
+                input.addEventListener('input', updateUrl);
+            });
+
+            // Copiar para área de transferência
+            btnCopiar.addEventListener('click', () => {
+                if (urlGeradaInput.value) {
+                    navigator.clipboard.writeText(urlGeradaInput.value).then(() => {
+                        const originalText = btnCopiar.textContent;
+                        btnCopiar.textContent = 'Copiado!';
+                        setTimeout(() => {
+                            btnCopiar.textContent = originalText;
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Falha ao copiar: ', err);
+                    });
+                }
+            });
+
+            // Gatilho inicial
+            onCanalChange();
+        });
+    </script>
+</body>
+</html>
